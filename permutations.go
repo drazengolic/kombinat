@@ -14,14 +14,14 @@ func PermutationCount(n int) int {
 }
 
 // Permutations without repetition by using non-recursive [Heap's algorithm].
-// Returns empty slice if elems is empty or nil.
+// Returns an error if elems is empty or nil.
 //
 // [Heap's algorithm]: https://en.wikipedia.org/wiki/Heap's_algorithm
-func Permutations[T any](elems []T) [][]T {
+func Permutations[T any](elems []T) ([][]T, error) {
 	n := len(elems)
 
 	if n == 0 {
-		return [][]T{}
+		return nil, fmt.Errorf("input slice is nil or empty")
 	}
 
 	count := PermutationCount(n)
@@ -52,7 +52,7 @@ func Permutations[T any](elems []T) [][]T {
 		}
 	}
 
-	return res
+	return res, nil
 }
 
 // PermutationGenerator implements a [Generator] interface for generating

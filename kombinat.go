@@ -4,11 +4,6 @@ import (
 	"fmt"
 )
 
-// GeneratorFunc is a function that accepts a dest slice that will receive the new elements on every function call (existing
-// elements will be overwritten). If the function returns false, there are no more results and dest is left
-// intact. The function will panic if the capacity of dest is lower than needed.
-type GeneratorFunc[T any] func([]T) bool
-
 type Generator[T any] interface {
 	Current() []T
 	CurrentCopy() []T
