@@ -56,7 +56,7 @@ func Variations[T any](k int, elems []T) ([][]T, error) {
 // for generating variations.
 type VariationGenerator[T any] struct {
 	n, k, count, row int
-	elems, ret       []T
+	elems, dest      []T
 	pows             []int
 }
 
@@ -75,7 +75,7 @@ func (gen *VariationGenerator[T]) Init(k int, elems []T) error {
 	gen.n = len(elems)
 
 	if k != gen.k {
-		gen.ret = make([]T, k)
+		gen.dest = make([]T, k)
 		gen.pows = make([]int, k)
 		gen.count = IntPow(gen.n, k)
 
@@ -93,33 +93,35 @@ func (gen *VariationGenerator[T]) Init(k int, elems []T) error {
 
 // Reset resets the generator to the beginning of the sequence.
 func (gen *VariationGenerator[T]) Reset() {
+	s := gen.dest
 	gen.Init(gen.k, gen.elems)
+	gen.SetDest(s)
 }
 
 // Current returns the internal slice that holds the current variation.
-// If you need to modify the returned slice, use [CurrentCopy] instead.
+// If you need to modify the returned slice, use [VariationGenerator.CurrentCopy] instead.
 func (gen *VariationGenerator[T]) Current() []T {
-	return gen.ret
+	return gen.dest
 }
 
 // CurrentCopy returns a copy of the internal slice that holds the current variation.
-// If you don't need to modify the returned slice, use [Current] to avoid allocation.
+// If you don't need to modify the returned slice, use [VariationGenerator.Current] to avoid allocation.
 func (gen *VariationGenerator[T]) CurrentCopy() []T {
-	return slices.Clone(gen.ret)
+	return slices.Clone(gen.dest)
 }
 
 // SetDest sets a destination slice that will receive the results.
 // Returns an error if there's not enough capacity in the slice.
 //
-// After the destination slice is set, subsequent calls to [Current]
+// After the destination slice is set, subsequent calls to [VariationGenerator.Current]
 // will return the provided slice.
 func (gen *VariationGenerator[T]) SetDest(dest []T) error {
-	if got := cap(dest); got < gen.n {
+	if got := cap(dest); got < gen.k {
 		return fmt.Errorf(capacityMsg(gen.k, got))
 	}
 
-	copy(dest, gen.ret)
-	gen.ret = dest
+	copy(dest, gen.dest)
+	gen.dest = dest
 
 	return nil
 }
@@ -133,7 +135,7 @@ func (gen *VariationGenerator[T]) Next() bool {
 
 	for col := 0; col < gen.k; col++ {
 		i := (gen.row / gen.pows[col]) % gen.n
-		gen.ret[col] = gen.elems[i]
+		gen.dest[col] = gen.elems[i]
 	}
 
 	gen.row++
@@ -142,7 +144,7 @@ func (gen *VariationGenerator[T]) Next() bool {
 }
 
 // NewVariationGenerator creates and initializes a new VariationGenerator.
-// Arguments and returned errors are the same ones from the [Init] method.
+// Arguments and returned errors are the same ones from the [VariationGenerator.Init] method.
 func NewVariationGenerator[T any](k int, elems []T) (*VariationGenerator[T], error) {
 	gen := new(VariationGenerator[T])
 	err := gen.Init(k, elems)

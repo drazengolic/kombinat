@@ -157,10 +157,31 @@ func TestVariationGenerator(t *testing.T) {
 				}
 			}
 			if gen.Next() {
-				t.Errorf("Didn't return false after done, dest is %v", gen.Current())
+				t.Errorf("Didn't return false on end, dest is %v", gen.Current())
 			}
 			if gen.Next() {
-				t.Errorf("Didn't return false after done (2), dest is %v", gen.Current())
+				t.Errorf("Didn't return false on end (2), dest is %v", gen.Current())
+			}
+
+			dest := make([]int, vd.k)
+			err = gen.SetDest(dest)
+
+			if err != nil {
+				t.Errorf("%v", err)
+			}
+
+			gen.Reset()
+
+			for i, w := range vd.want {
+				if gen.Next(); slices.Compare(w, dest) != 0 {
+					t.Errorf("Not equal at %v after reset, \ngot: %v, \nwant: %v", i, dest, w)
+				}
+			}
+			if gen.Next() {
+				t.Errorf("Didn't return false on end after reset, dest is %v", dest)
+			}
+			if gen.Next() {
+				t.Errorf("Didn't return false on end after reset (2), dest is %v", dest)
 			}
 		})
 	}

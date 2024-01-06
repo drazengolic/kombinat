@@ -49,7 +49,7 @@ func TestPermutations(t *testing.T) {
 		count := PermutationCount(len(input))
 
 		t.Run(fmt.Sprintf("p(%d)=%d", i, count), func(t *testing.T) {
-			res := Permutations(input)
+			res, _ := Permutations(input)
 			slices.SortFunc(res, func(e1, e2 []int) int {
 				return slices.Compare(e1, e2)
 			})
@@ -92,6 +92,37 @@ func TestPermutationGenerator(t *testing.T) {
 			if compareSliceOfSlices(res, want) != 0 {
 				t.Errorf("Not equal, \ngot: %v, \nwant: %v", res, want)
 			}
+
+			// reset + dest
+			res2 := make([][]int, 0, count)
+			dest := make([]int, i)
+			err := gen.SetDest(dest)
+
+			if err != nil {
+				t.Errorf("%v", err)
+			}
+
+			gen.Reset()
+
+			for i := 0; i < count; i++ {
+				gen.Next()
+				res2 = append(res2, slices.Clone(dest))
+			}
+
+			if gen.Next() {
+				t.Errorf("Didn't return false on end after reset, dest is %v", dest)
+			}
+			if gen.Next() {
+				t.Errorf("Didn't return false on end after reset (2), dest is %v", dest)
+			}
+
+			slices.SortFunc(res2, func(e1, e2 []int) int {
+				return slices.Compare(e1, e2)
+			})
+
+			if compareSliceOfSlices(res2, want) != 0 {
+				t.Errorf("Not equal after reset, \ngot: %v, \nwant: %v", res2, want)
+			}
 		})
 	}
 }
@@ -109,7 +140,7 @@ func BenchmarkPermutations(b *testing.B) {
 	}
 }
 
-func BenchmarkPermutationGen(b *testing.B) {
+func BenchmarkPermutationGenerator(b *testing.B) {
 	items := []int{1, 2, 3, 4, 5, 6}
 
 	for k := 2; k <= 6; k++ {

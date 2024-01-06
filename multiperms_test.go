@@ -6,102 +6,100 @@ import (
 	"testing"
 )
 
+var (
+	_mp_data = []struct {
+		name  string
+		input []string
+		reps  []int
+		want  [][]string
+	}{
+		{
+			name:  "P(ABCC)",
+			input: []string{"A", "B", "C"},
+			reps:  []int{1, 1, 2},
+			want: [][]string{
+				{"C", "C", "B", "A"},
+				{"A", "C", "C", "B"},
+				{"C", "A", "C", "B"},
+				{"C", "C", "A", "B"},
+				{"B", "C", "C", "A"},
+				{"C", "B", "C", "A"},
+				{"A", "C", "B", "C"},
+				{"C", "A", "B", "C"},
+				{"B", "C", "A", "C"},
+				{"A", "B", "C", "C"},
+				{"B", "A", "C", "C"},
+				{"C", "B", "A", "C"},
+			},
+		},
+		{
+			name:  "P(AABB)",
+			input: []string{"A", "B"},
+			reps:  []int{2, 2},
+			want: [][]string{
+				{"A", "A", "B", "B"},
+				{"A", "B", "A", "B"},
+				{"A", "B", "B", "A"},
+				{"B", "A", "A", "B"},
+				{"B", "A", "B", "A"},
+				{"B", "B", "A", "A"},
+			},
+		},
+		{
+			name:  "P(A)",
+			input: []string{"A"},
+			reps:  []int{1},
+			want: [][]string{
+				{"A"},
+			},
+		},
+		{
+			name:  "P(AA)",
+			input: []string{"A"},
+			reps:  []int{2},
+			want: [][]string{
+				{"A", "A"},
+			},
+		},
+		{
+			name:  "P(AB)",
+			input: []string{"A", "B"},
+			reps:  []int{1, 1},
+			want: [][]string{
+				{"B", "A"},
+				{"A", "B"},
+			},
+		},
+	}
+)
+
 func TestMultiPermutations(t *testing.T) {
-	t.Run("P(1233)", func(t *testing.T) {
-		res, err := MultiPermutations([]int{1, 2, 3}, []int{1, 1, 2})
 
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
+	for _, v := range _mp_data {
+		v := v
 
-		want := [][]int{
-			{3, 3, 2, 1},
-			{1, 3, 3, 2},
-			{3, 1, 3, 2},
-			{3, 3, 1, 2},
-			{2, 3, 3, 1},
-			{3, 2, 3, 1},
-			{1, 3, 2, 3},
-			{3, 1, 2, 3},
-			{2, 3, 1, 3},
-			{1, 2, 3, 3},
-			{2, 1, 3, 3},
-			{3, 2, 1, 3},
-		}
+		t.Run(v.name, func(t *testing.T) {
+			res, err := MultiPermutations(v.input, v.reps)
 
-		slices.SortFunc(want, func(e1, e2 []int) int {
-			return slices.Compare(e1, e2)
+			if err != nil {
+				t.Errorf("got error: %v", err)
+			}
+
+			want := slices.Clone(v.want)
+
+			slices.SortFunc(want, func(e1, e2 []string) int {
+				return slices.Compare(e1, e2)
+			})
+
+			slices.SortFunc(res, func(e1, e2 []string) int {
+				return slices.Compare(e1, e2)
+			})
+
+			if compareSliceOfSlices(res, want) != 0 {
+				t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
+			}
 		})
-		slices.SortFunc(res, func(e1, e2 []int) int {
-			return slices.Compare(e1, e2)
-		})
-
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(AABB)", func(t *testing.T) {
-		res, err := MultiPermutations([]string{"A", "B"}, []int{2, 2})
-
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-
-		want := [][]string{
-			{"A", "A", "B", "B"},
-			{"A", "B", "A", "B"},
-			{"A", "B", "B", "A"},
-			{"B", "A", "A", "B"},
-			{"B", "A", "B", "A"},
-			{"B", "B", "A", "A"},
-		}
-
-		slices.SortFunc(want, func(e1, e2 []string) int {
-			return slices.Compare(e1, e2)
-		})
-		slices.SortFunc(res, func(e1, e2 []string) int {
-			return slices.Compare(e1, e2)
-		})
-
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(A)", func(t *testing.T) {
-		res, err := MultiPermutations([]string{"A"}, []int{1})
-
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-		want := [][]string{{"A"}}
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(AA)", func(t *testing.T) {
-		res, err := MultiPermutations([]string{"A"}, []int{2})
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-		want := [][]string{{"A", "A"}}
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(AB)", func(t *testing.T) {
-		res, err := MultiPermutations([]string{"A", "B"}, []int{1, 1})
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-		want := [][]string{{"B", "A"}, {"A", "B"}}
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
+	}
 
 	t.Run("errors", func(t *testing.T) {
 		_, err := MultiPermutations([]string{}, []int{2})
@@ -138,125 +136,74 @@ func TestMultiPermutationsCount(t *testing.T) {
 }
 
 func TestMultiPermutationGenerator(t *testing.T) {
-	t.Run("P(1233)", func(t *testing.T) {
-		gen, err := NewMultiPermutationGenerator([]int{1, 2, 3}, []int{1, 1, 2})
+	for _, v := range _mp_data {
+		v := v
 
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
+		t.Run(v.name, func(t *testing.T) {
+			gen, err := NewMultiPermutationGenerator(v.input, v.reps)
 
-		want := [][]int{
-			{3, 3, 2, 1},
-			{1, 3, 3, 2},
-			{3, 1, 3, 2},
-			{3, 3, 1, 2},
-			{2, 3, 3, 1},
-			{3, 2, 3, 1},
-			{1, 3, 2, 3},
-			{3, 1, 2, 3},
-			{2, 3, 1, 3},
-			{1, 2, 3, 3},
-			{2, 1, 3, 3},
-			{3, 2, 1, 3},
-		}
+			if err != nil {
+				t.Errorf("got error: %v", err)
+			}
+			res := make([][]string, 0, len(v.want))
 
-		res := make([][]int, 0, 12)
+			for gen.Next() {
+				res = append(res, gen.CurrentCopy())
+			}
 
-		for gen.Next() {
-			res = append(res, gen.CurrentCopy())
-		}
+			if gen.Next() {
+				t.Errorf("didn't return false on end, dest is %v", gen.Current())
+			}
+			if gen.Next() {
+				t.Errorf("didn't return false on end (2), dest is %v", gen.Current())
+			}
 
-		if gen.Next() {
-			t.Errorf("didn't return false on end, dest is %v", gen.Current())
-		}
-		if gen.Next() {
-			t.Errorf("didn't return false on end (2), dest is %v", gen.Current())
-		}
+			want := slices.Clone(v.want)
 
-		slices.SortFunc(want, func(e1, e2 []int) int {
-			return slices.Compare(e1, e2)
+			slices.SortFunc(want, func(e1, e2 []string) int {
+				return slices.Compare(e1, e2)
+			})
+			slices.SortFunc(res, func(e1, e2 []string) int {
+				return slices.Compare(e1, e2)
+			})
+
+			if compareSliceOfSlices(res, want) != 0 {
+				t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
+			}
+
+			// reset + dest
+			count := MultiPermutationsCount(v.reps)
+			res2 := make([][]string, 0, count)
+			dest := make([]string, len(v.want[0]))
+			err = gen.SetDest(dest)
+
+			if err != nil {
+				t.Errorf("%v", err)
+			}
+
+			gen.Reset()
+
+			for i := 0; i < count; i++ {
+				gen.Next()
+				res2 = append(res2, slices.Clone(dest))
+			}
+
+			if gen.Next() {
+				t.Errorf("Didn't return false on end after reset, dest is %v", dest)
+			}
+			if gen.Next() {
+				t.Errorf("Didn't return false on end after reset (2), dest is %v", dest)
+			}
+
+			slices.SortFunc(res2, func(e1, e2 []string) int {
+				return slices.Compare(e1, e2)
+			})
+
+			if compareSliceOfSlices(res2, want) != 0 {
+				t.Errorf("Not equal after reset, \ngot: %v, \nwant: %v", res2, want)
+			}
 		})
-		slices.SortFunc(res, func(e1, e2 []int) int {
-			return slices.Compare(e1, e2)
-		})
-
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(A)", func(t *testing.T) {
-		gen, err := NewMultiPermutationGenerator([]string{"A"}, []int{1})
-
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-		res := make([][]string, 0, 1)
-
-		for gen.Next() {
-			res = append(res, gen.CurrentCopy())
-		}
-
-		if gen.Next() {
-			t.Errorf("didn't return false on end, dest is %v", gen.Current())
-		}
-		if gen.Next() {
-			t.Errorf("didn't return false on end (2), dest is %v", gen.Current())
-		}
-
-		want := [][]string{{"A"}}
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(AA)", func(t *testing.T) {
-		gen, err := NewMultiPermutationGenerator([]string{"A"}, []int{2})
-
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-
-		want := [][]string{{"A", "A"}}
-		res := make([][]string, 0, 1)
-
-		for gen.Next() {
-			res = append(res, gen.CurrentCopy())
-		}
-		if gen.Next() {
-			t.Errorf("didn't return false on end, dest is %v", gen.Current())
-		}
-		if gen.Next() {
-			t.Errorf("didn't return false on end (2), dest is %v", gen.Current())
-		}
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
-
-	t.Run("P(AB)", func(t *testing.T) {
-		gen, err := NewMultiPermutationGenerator([]string{"A", "B"}, []int{1, 1})
-
-		if err != nil {
-			t.Errorf("got error: %v", err)
-		}
-
-		want := [][]string{{"B", "A"}, {"A", "B"}}
-		res := make([][]string, 0, 1)
-
-		for gen.Next() {
-			res = append(res, gen.CurrentCopy())
-		}
-		if gen.Next() {
-			t.Errorf("didn't return false on end, dest is %v", gen.Current())
-		}
-		if gen.Next() {
-			t.Errorf("didn't return false on end (2), dest is %v", gen.Current())
-		}
-		if compareSliceOfSlices(res, want) != 0 {
-			t.Errorf("not equal, \ngot: %v, \nwant: %v", res, want)
-		}
-	})
+	}
 
 	t.Run("errors", func(t *testing.T) {
 		_, err := NewMultiPermutationGenerator([]string{}, []int{2})

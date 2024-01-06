@@ -81,17 +81,19 @@ func (gen *PermutationGenerator[T]) Init(elems []T) error {
 
 // Reset resets the generator to the beginning of the sequence.
 func (gen *PermutationGenerator[T]) Reset() {
+	s := gen.a
 	gen.Init(gen.elems)
+	gen.SetDest(s)
 }
 
 // Current returns the internal slice that holds the current permutation.
-// If you need to modify the returned slice, use [CurrentCopy] instead.
+// If you need to modify the returned slice, use [PermutationGenerator.CurrentCopy] instead.
 func (gen *PermutationGenerator[T]) Current() []T {
 	return gen.a
 }
 
 // CurrentCopy returns a copy of the internal slice that holds the current permutation.
-// If you don't need to modify the returned slice, use [Current] to avoid allocation.
+// If you don't need to modify the returned slice, use [PermutationGenerator.Current] to avoid allocation.
 func (gen *PermutationGenerator[T]) CurrentCopy() []T {
 	return slices.Clone(gen.a)
 }
@@ -99,7 +101,7 @@ func (gen *PermutationGenerator[T]) CurrentCopy() []T {
 // SetDest sets a destination slice that will receive the results.
 // Returns an error if there's not enough capacity in the slice.
 //
-// After the destination slice is set, subsequent calls to [Current]
+// After the destination slice is set, subsequent calls to [PermutationGenerator.Current]
 // will return the provided slice.
 func (gen *PermutationGenerator[T]) SetDest(dest []T) error {
 	if got := cap(dest); got < gen.n {

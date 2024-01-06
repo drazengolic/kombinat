@@ -158,7 +158,7 @@ type MultiPermutationGenerator[T any] struct {
 //
 // It accepts slices
 //   - elems: set of elements to make permutations from
-//   - reps: number of repetitions per element, must be 1 or higher.
+//   - reps: number of repetitions per element, rep must be 1 or higher.
 //
 // Number of items in both slices must match, as reps correspond to the elems.
 func (gen *MultiPermutationGenerator[T]) Init(elems []T, reps []int) error {
@@ -217,17 +217,19 @@ func (gen *MultiPermutationGenerator[T]) Init(elems []T, reps []int) error {
 
 // Reset resets the generator to the beginning of the sequence.
 func (gen *MultiPermutationGenerator[T]) Reset() {
+	s := gen.dest
 	gen.Init(gen.elems, gen.reps)
+	gen.SetDest(s)
 }
 
 // Current returns the internal slice that holds the current permutation.
-// If you need to modify the returned slice, use [CurrentCopy] instead.
+// If you need to modify the returned slice, use [MultiPermutationGenerator.CurrentCopy] instead.
 func (gen *MultiPermutationGenerator[T]) Current() []T {
 	return gen.dest
 }
 
 // CurrentCopy returns a copy of the internal slice that holds the current permutation.
-// If you don't need to modify the returned slice, use [Current] to avoid allocation.
+// If you don't need to modify the returned slice, use [MultiPermutationGenerator.Current] to avoid allocation.
 func (gen *MultiPermutationGenerator[T]) CurrentCopy() []T {
 	return slices.Clone(gen.dest)
 }
@@ -235,7 +237,7 @@ func (gen *MultiPermutationGenerator[T]) CurrentCopy() []T {
 // SetDest sets a destination slice that will receive the results.
 // Returns an error if there's not enough capacity in the slice.
 //
-// After the destination slice is set, subsequent calls to [Current]
+// After the destination slice is set, subsequent calls to [MultiPermutationGenerator.Current]
 // will return the provided slice.
 func (gen *MultiPermutationGenerator[T]) SetDest(dest []T) error {
 	if got := cap(dest); got < gen.n {

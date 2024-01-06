@@ -172,7 +172,9 @@ func (gen *CombinationGenerator[T]) Init(m int, elems []T) error {
 
 // Reset resets the generator to the beginning of the sequence.
 func (gen *CombinationGenerator[T]) Reset() {
+	s := gen.c
 	gen.Init(gen.m, gen.elems)
+	gen.SetDest(s)
 }
 
 // Next produces a new combination in the generator. If it returns false,
