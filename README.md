@@ -77,14 +77,17 @@ ps, err := Permutations([]int{1, 2, 3, 4, 5}) //[][]int
 
 Some benchmarks run on Apple M1 Pro can be found below:
 
+```
+goos: darwin
+goarch: arm64
+pkg: github.com/drazengolic/kombinat
+```
+
 ## Combinations
 
 **go test -bench BenchmarkCombinations -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
 BenchmarkCombinations/c(2,6)=15-8           26261770         442.7 ns/op       704 B/op       18 allocs/op
 BenchmarkCombinations/c(3,6)=20-8           20279744         591.3 ns/op      1048 B/op       23 allocs/op
 BenchmarkCombinations/c(4,6)=15-8           25988402         459.6 ns/op       960 B/op       18 allocs/op
@@ -95,9 +98,6 @@ BenchmarkCombinations/c(6,6)=1-8            123885088         96.82 ns/op      1
 **go test -bench BenchmarkCombinationGenerator -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
 BenchmarkCombinationGenerator/c(2,6)=15-8           81718262         126.7 ns/op        80 B/op        2 allocs/op
 BenchmarkCombinationGenerator/c(3,6)=20-8           75011426         157.6 ns/op        88 B/op        2 allocs/op
 BenchmarkCombinationGenerator/c(4,6)=15-8           93862041         126.8 ns/op        96 B/op        2 allocs/op
@@ -110,9 +110,6 @@ BenchmarkCombinationGenerator/c(6,6)=1-8            224967640         53.35 ns/o
 **go test -bench BenchmarkPermutations -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
 BenchmarkPermutations/p(2)=2-8          133187949         90.06 ns/op      112 B/op        5 allocs/op
 BenchmarkPermutations/p(3)=6-8          56977621         208.8 ns/op       336 B/op        9 allocs/op
 BenchmarkPermutations/p(4)=24-8         18749431         637.7 ns/op      1408 B/op       27 allocs/op
@@ -123,9 +120,6 @@ BenchmarkPermutations/p(6)=720-8          668253       17674 ns/op     53088 B/o
 **go test -bench BenchmarkPermutationGenerator -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
 BenchmarkPermutationGenerator/p(2)=2-8          310151914         38.68 ns/op       32 B/op        2 allocs/op
 BenchmarkPermutationGenerator/p(3)=6-8          218699462         54.79 ns/op       48 B/op        2 allocs/op
 BenchmarkPermutationGenerator/p(4)=24-8         92384619         128.1 ns/op        64 B/op        2 allocs/op
@@ -138,19 +132,17 @@ BenchmarkPermutationGenerator/p(6)=720-8         4256427        2819 ns/op      
 **go test -bench BenchmarkMultiPermutations -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
-BenchmarkMultiPermutations-8      122962       98468 ns/op    342145 B/op     1700 allocs/op
+BenchmarkMultiPermutations/P(AABCCCDD)-8            123399       97058 ns/op    342145 B/op     1700 allocs/op
+BenchmarkMultiPermutations/P(AABB)-8              28815830         414.8 ns/op       832 B/op       14 allocs/op
+BenchmarkMultiPermutations/P(ABCD)-8               9078172        1314 ns/op      3136 B/op       34 allocs/op
 ```
 
 **go test -bench BenchmarkMultiPermutationGenerator -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
-BenchmarkMultiPermutationGenerator-8      453283       24774 ns/op       192 B/op        9 allocs/op
+BenchmarkMultiPermutationGenerator/P(AABCCCDD)-8            447722       24886 ns/op       192 B/op        9 allocs/op
+BenchmarkMultiPermutationGenerator/P(AABB)-8              76625335         154.6 ns/op        96 B/op        5 allocs/op
+BenchmarkMultiPermutationGenerator/P(ABCD)-8              34821980         343.3 ns/op        96 B/op        5 allocs/op
 ```
 
 ## Variations
@@ -158,9 +150,6 @@ BenchmarkMultiPermutationGenerator-8      453283       24774 ns/op       192 B/o
 **go test -bench BenchmarkVariations -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
 BenchmarkVariations/v(2,4)=16-8           38591599         296.7 ns/op       656 B/op       18 allocs/op
 BenchmarkVariations/v(3,4)=64-8            9806036        1217 ns/op      3096 B/op       66 allocs/op
 BenchmarkVariations/v(4,4)=256-8           2516913        4775 ns/op     14368 B/op      258 allocs/op
@@ -171,9 +160,6 @@ BenchmarkVariations/v(6,4)=4096-8           141417       85309 ns/op    294960 B
 **go test -bench BenchmarkVariationGenerator -benchmem -benchtime=10s**
 
 ```
-goos: darwin
-goarch: arm64
-pkg: github.com/drazengolic/kombinat
 BenchmarkVariationGenerator/v(2,4)=16-8           227415219         52.79 ns/op        0 B/op        0 allocs/op
 BenchmarkVariationGenerator/v(3,4)=64-8           36819321         325.0 ns/op         0 B/op        0 allocs/op
 BenchmarkVariationGenerator/v(4,4)=256-8           8336451        1438 ns/op         0 B/op        0 allocs/op

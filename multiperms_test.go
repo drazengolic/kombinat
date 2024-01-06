@@ -233,23 +233,47 @@ func TestMultiPermutationGenerator(t *testing.T) {
 }
 
 func BenchmarkMultiPermutations(b *testing.B) {
-	elems := []string{"A", "B", "C", "D"}
-	reps := []int{2, 1, 3, 2}
+	table := []struct {
+		name  string
+		reps  []int
+		input []string
+	}{
+		{"P(AABCCCDD)", []int{2, 1, 3, 2}, []string{"A", "B", "C", "D"}},
+		{"P(AABB)", []int{2, 2}, []string{"A", "B"}},
+		{"P(ABCD)", []int{1, 1, 1, 1}, []string{"A", "B", "C", "D"}},
+	}
 
-	for i := 0; i < b.N; i++ {
-		MultiPermutations(elems, reps)
+	for _, v := range table {
+		v := v
+		b.Run(v.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				MultiPermutations(v.input, v.reps)
+			}
+		})
 	}
 }
 
 func BenchmarkMultiPermutationGenerator(b *testing.B) {
-	elems := []string{"A", "B", "C", "D"}
-	reps := []int{2, 1, 3, 2}
 	gen := new(MultiPermutationGenerator[string])
 
-	for i := 0; i < b.N; i++ {
-		gen.Init(elems, reps)
-		for gen.Next() {
-			gen.Current()
-		}
+	table := []struct {
+		name  string
+		reps  []int
+		input []string
+	}{
+		{"P(AABCCCDD)", []int{2, 1, 3, 2}, []string{"A", "B", "C", "D"}},
+		{"P(AABB)", []int{2, 2}, []string{"A", "B"}},
+		{"P(ABCD)", []int{1, 1, 1, 1}, []string{"A", "B", "C", "D"}},
+	}
+
+	for _, v := range table {
+		v := v
+		b.Run(v.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				gen.Init(v.input, v.reps)
+				for gen.Next() {
+				}
+			}
+		})
 	}
 }
