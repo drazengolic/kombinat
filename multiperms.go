@@ -1,3 +1,7 @@
+// Copyright 2024 Dražen Golić. All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package kombinat
 
 import (
@@ -302,7 +306,7 @@ func (gen *MultiPermutationGenerator[T]) Next() bool {
 }
 
 // NewMultiPermutationGenerator creates and initializes a new MultiPermutationGenerator.
-// Arguments and returned errors are the same ones from the [Init] method.
+// Arguments and returned errors are the same ones from the [MultiPermutationGenerator.Init] method.
 func NewMultiPermutationGenerator[T any](elems []T, reps []int) (*MultiPermutationGenerator[T], error) {
 	gen := new(MultiPermutationGenerator[T])
 	err := gen.Init(elems, reps)

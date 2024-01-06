@@ -1,3 +1,7 @@
+// Copyright 2024 Dražen Golić. All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package kombinat
 
 import (
@@ -116,7 +120,7 @@ func Combinations[T any](m int, elems []T) ([][]T, error) {
 }
 
 // CombinationGenerator implements a [Generator] interface for generating combinations of
-// size m out of elements in elems slice on every invocation of the [Next] method.
+// size m out of elements in elems slice on every invocation of the [CombinationGenerator.Next] method.
 // For algorithm details see [Combinations].
 type CombinationGenerator[T any] struct {
 	n, i, x, z, k, m int
@@ -244,13 +248,13 @@ func (gen *CombinationGenerator[T]) Next() bool {
 }
 
 // Current returns the internal slice that holds the current combination.
-// If you need to modify the returned slice, use [CurrentCopy] instead.
+// If you need to modify the returned slice, use [CombinationGenerator.CurrentCopy] instead.
 func (gen *CombinationGenerator[T]) Current() []T {
 	return gen.c
 }
 
 // CurrentCopy returns a copy of the internal slice that holds the current combination.
-// If you don't need to modify the returned slice, use [Current] to avoid allocation.
+// If you don't need to modify the returned slice, use [CombinationGenerator.Current] to avoid allocation.
 func (gen *CombinationGenerator[T]) CurrentCopy() []T {
 	return slices.Clone(gen.c)
 }
@@ -258,7 +262,7 @@ func (gen *CombinationGenerator[T]) CurrentCopy() []T {
 // SetDest sets a destination slice that will receive the results.
 // Returns an error if there's not enough capacity in the slice.
 //
-// After the destination slice is set, subsequent calls to [Current]
+// After the destination slice is set, subsequent calls to [CombinationGenerator.Current]
 // will return the provided slice.
 func (gen *CombinationGenerator[T]) SetDest(dest []T) error {
 	if got := cap(dest); got < gen.m {
@@ -272,7 +276,7 @@ func (gen *CombinationGenerator[T]) SetDest(dest []T) error {
 }
 
 // NewCombinationGenerator creates and initializes a new CombinationGenerator.
-// Arguments and returned errors are the same ones from the [Init] method.
+// Arguments and returned errors are the same ones from the [CombinationGenerator.Init] method.
 func NewCombinationGenerator[T any](m int, elems []T) (*CombinationGenerator[T], error) {
 	gen := new(CombinationGenerator[T])
 	err := gen.Init(m, elems)

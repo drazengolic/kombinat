@@ -1,3 +1,7 @@
+// Copyright 2024 Dražen Golić. All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package kombinat
 
 import (
@@ -156,7 +160,7 @@ func (gen *PermutationGenerator[T]) Next() bool {
 }
 
 // NewPermutationGenerator creates and initializes a new PermutationGenerator.
-// Arguments and returned errors are the same ones from the [Init] method.
+// Arguments and returned errors are the same ones from the [PermutationGenerator.Init] method.
 func NewPermutationGenerator[T any](elems []T) (*PermutationGenerator[T], error) {
 	gen := new(PermutationGenerator[T])
 	err := gen.Init(elems)
