@@ -33,9 +33,9 @@ Generator instance can be reused by invoking `Init` with different input argumen
 
 ### Iteration
 
-To have the generator produce another result, call the `Next` method. It returns `true` until it reaches the end of the sequence, and therefore can be used in a `for` loop.
+To have the generator produce another result, call the `Next` method. The method returns `true` until it reaches the end of the sequence, and therefore can be used in a `for` loop.
 
-To access the new result, call `Current` or `CurrentCopy` after calling `Next`. `Current` will return the internaly used slice, whereas `CurrentCopy` will return a copy of the internal slice. Use the former if you are not going to modify the slice in order to avoid allocation. But if modification of the slice is expected, use `CurrentCopy` in order not to interfere with the generator and cause unexpected behavior.
+To access the new result, call `Current` or `CurrentCopy` after calling `Next` (it has to be called at least once!). `Current` will return the internaly used slice, whereas `CurrentCopy` will return a copy of the internal slice. Use the former if you are not going to modify the slice in order to avoid allocation. But if modification of the slice is expected, use `CurrentCopy` in order not to interfere with the generator and cause unexpected behavior.
 
 For example:
 
@@ -46,7 +46,7 @@ for gen.Next() {
 }
 ```
 
-It is possible to set a slice that will be updated whenever `Next` is called by using `SetDest` method, that also enables partial updates of a larger slice, for example:
+It is possible to set a slice that will be updated whenever `Next` is called by using `SetDest` method. This also enables partial updates of a larger slice, for example:
 
 ```Go
 items := []string{"A", "B", "C"}
@@ -61,7 +61,7 @@ fmt.Printf("%v", dest) // [i, B, C, l]
 
 After a new destination slice is set, subsequent calls to `Current` will always return the slice that was set, making the call redundant.
 
-To make the generator start from the beginning, call `Reset`.
+To make the generator start from the beginning, call `Reset`. Reset preserves the destination slice.
 
 ## Functions
 
@@ -113,8 +113,8 @@ BenchmarkCombinationGenerator/c(6,6)=1-8            224967640         53.35 ns/o
 BenchmarkPermutations/p(2)=2-8          133187949         90.06 ns/op      112 B/op        5 allocs/op
 BenchmarkPermutations/p(3)=6-8          56977621         208.8 ns/op       336 B/op        9 allocs/op
 BenchmarkPermutations/p(4)=24-8         18749431         637.7 ns/op      1408 B/op       27 allocs/op
-BenchmarkPermutations/p(5)=120-8         4090677        2933 ns/op      8928 B/op      123 allocs/op
-BenchmarkPermutations/p(6)=720-8          668253       17674 ns/op     53088 B/op      723 allocs/op
+BenchmarkPermutations/p(5)=120-8         4090677        2933 ns/op        8928 B/op      123 allocs/op
+BenchmarkPermutations/p(6)=720-8          668253       17674 ns/op       53088 B/op      723 allocs/op
 ```
 
 **go test -bench BenchmarkPermutationGenerator -benchmem -benchtime=10s**
@@ -124,7 +124,7 @@ BenchmarkPermutationGenerator/p(2)=2-8          310151914         38.68 ns/op   
 BenchmarkPermutationGenerator/p(3)=6-8          218699462         54.79 ns/op       48 B/op        2 allocs/op
 BenchmarkPermutationGenerator/p(4)=24-8         92384619         128.1 ns/op        64 B/op        2 allocs/op
 BenchmarkPermutationGenerator/p(5)=120-8        24015909         499.2 ns/op        96 B/op        2 allocs/op
-BenchmarkPermutationGenerator/p(6)=720-8         4256427        2819 ns/op        96 B/op        2 allocs/op
+BenchmarkPermutationGenerator/p(6)=720-8         4256427        2819 ns/op          96 B/op        2 allocs/op
 ```
 
 ## MultiPermutations
@@ -132,15 +132,15 @@ BenchmarkPermutationGenerator/p(6)=720-8         4256427        2819 ns/op      
 **go test -bench BenchmarkMultiPermutations -benchmem -benchtime=10s**
 
 ```
-BenchmarkMultiPermutations/P(AABCCCDD)-8            123399       97058 ns/op    342145 B/op     1700 allocs/op
+BenchmarkMultiPermutations/P(AABCCCDD)-8            123399       97058 ns/op      342145 B/op     1700 allocs/op
 BenchmarkMultiPermutations/P(AABB)-8              28815830         414.8 ns/op       832 B/op       14 allocs/op
-BenchmarkMultiPermutations/P(ABCD)-8               9078172        1314 ns/op      3136 B/op       34 allocs/op
+BenchmarkMultiPermutations/P(ABCD)-8               9078172        1314 ns/op        3136 B/op       34 allocs/op
 ```
 
 **go test -bench BenchmarkMultiPermutationGenerator -benchmem -benchtime=10s**
 
 ```
-BenchmarkMultiPermutationGenerator/P(AABCCCDD)-8            447722       24886 ns/op       192 B/op        9 allocs/op
+BenchmarkMultiPermutationGenerator/P(AABCCCDD)-8            447722       24886 ns/op         192 B/op        9 allocs/op
 BenchmarkMultiPermutationGenerator/P(AABB)-8              76625335         154.6 ns/op        96 B/op        5 allocs/op
 BenchmarkMultiPermutationGenerator/P(ABCD)-8              34821980         343.3 ns/op        96 B/op        5 allocs/op
 ```
@@ -151,10 +151,10 @@ BenchmarkMultiPermutationGenerator/P(ABCD)-8              34821980         343.3
 
 ```
 BenchmarkVariations/v(2,4)=16-8           38591599         296.7 ns/op       656 B/op       18 allocs/op
-BenchmarkVariations/v(3,4)=64-8            9806036        1217 ns/op      3096 B/op       66 allocs/op
-BenchmarkVariations/v(4,4)=256-8           2516913        4775 ns/op     14368 B/op      258 allocs/op
-BenchmarkVariations/v(5,4)=1024-8           577398       20656 ns/op     73776 B/op     1026 allocs/op
-BenchmarkVariations/v(6,4)=4096-8           141417       85309 ns/op    294960 B/op     4098 allocs/op
+BenchmarkVariations/v(3,4)=64-8            9806036        1217 ns/op        3096 B/op       66 allocs/op
+BenchmarkVariations/v(4,4)=256-8           2516913        4775 ns/op       14368 B/op      258 allocs/op
+BenchmarkVariations/v(5,4)=1024-8           577398       20656 ns/op       73776 B/op     1026 allocs/op
+BenchmarkVariations/v(6,4)=4096-8           141417       85309 ns/op      294960 B/op     4098 allocs/op
 ```
 
 **go test -bench BenchmarkVariationGenerator -benchmem -benchtime=10s**
@@ -162,7 +162,7 @@ BenchmarkVariations/v(6,4)=4096-8           141417       85309 ns/op    294960 B
 ```
 BenchmarkVariationGenerator/v(2,4)=16-8           227415219         52.79 ns/op        0 B/op        0 allocs/op
 BenchmarkVariationGenerator/v(3,4)=64-8           36819321         325.0 ns/op         0 B/op        0 allocs/op
-BenchmarkVariationGenerator/v(4,4)=256-8           8336451        1438 ns/op         0 B/op        0 allocs/op
-BenchmarkVariationGenerator/v(5,4)=1024-8          1733893        6920 ns/op         0 B/op        0 allocs/op
-BenchmarkVariationGenerator/v(6,4)=4096-8           367791       32557 ns/op         0 B/op        0 allocs/op
+BenchmarkVariationGenerator/v(4,4)=256-8           8336451        1438 ns/op           0 B/op        0 allocs/op
+BenchmarkVariationGenerator/v(5,4)=1024-8          1733893        6920 ns/op           0 B/op        0 allocs/op
+BenchmarkVariationGenerator/v(6,4)=4096-8           367791       32557 ns/op           0 B/op        0 allocs/op
 ```
