@@ -1,6 +1,6 @@
 # Kombinat
 
-Package kombinat implements generic combinatorial functions and generators for producing combinations, permutations, multiset permutations and variations out of elements in a slice of any type.
+Package kombinat implements generic combinatorial functions and generators for producing combinations, permutations, multiset permutations and variations from elements in a slice of any type in Go language.
 
 The goal of this library is the ability to efficiently permute elements of a slice for different testing and probing scenarios. If you need a mathematics library that also has many more features, use [Gonum](https://www.gonum.org/) instead.
 
