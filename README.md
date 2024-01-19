@@ -1,5 +1,7 @@
 # Kombinat
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/drazengolic/kombinat.svg)](https://pkg.go.dev/github.com/drazengolic/kombinat)
+
 Package kombinat implements generic combinatorics functions and generators for producing combinations, permutations, multiset permutations and variations from elements in a slice of any type in Go language.
 
 The goal of this library is the ability to efficiently permute elements of a slice for different testing and probing scenarios. If you need a mathematics library that also has many more features, use [Gonum](https://www.gonum.org/) instead.
@@ -11,6 +13,10 @@ The package consists of the following functions and generators:
   - **Variations** (custom)
 
 Generators are generaly recommended as they are not only faster, but also memory efficient, and can store results into different slices. If you need to reuse the results many times, functions that generate the entire result set are also available.
+
+## Production
+
+The package is heavily used in a simple web game [My Number](https://mynumber.drazengolic.com) ([Moj Broj](https://mojbroj.drazengolic.com)) that is similar in spirit to Countdown Numbers, but modeled after one of the games in the popular TV show _Slagalica_ on Radio Television of Serbia. 
 
 # Usage
 
